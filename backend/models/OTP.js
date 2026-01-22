@@ -34,4 +34,5 @@ const otpSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('OTP', otpSchema);
+// ✅ FIX (prevents OverwriteModelError on Railway)
+module.exports = mongoose.models.OTP || mongoose.model('OTP', otpSchema);

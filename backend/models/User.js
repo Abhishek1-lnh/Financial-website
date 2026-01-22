@@ -57,10 +57,12 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
   if (!this.userId) {
-    const count = await mongoose.model('User').countDocuments();
+    // ✅ FIX: use the already-registered model (don’t call mongoose.model('User') here)
+    const count = await this.constructor.countDocuments();
     this.userId = `USR${String(count + 1).padStart(6, '0')}`;
   }
   next();
 });
 
-module.exports = mongoose.model('User', userSchema);
+// ✅ FIX: prevents OverwriteModelError
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
